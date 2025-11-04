@@ -1,5 +1,7 @@
 # 🐾 Find Your Look-Alike Animal
 
+![홈 화면](util/HOME.png)
+
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.9+-blue?logo=python">
   <img src="https://img.shields.io/badge/Flask-2.x-black?logo=flask">
