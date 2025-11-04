@@ -37,8 +37,8 @@ Upload your photo, and the model predicts your look-alike animal instantly!
 | **Frontend** | HTML, CSS (Jinja2 Template) |
 | **Deployment** | Flask Development Server / Render / AWS EC2 |
 
-Training Dataset : https://www.kaggle.com/datasets/andrewmvd/animal-faces
-Model Weights : https://drive.google.com/file/d/1RUdl6mS58G11yhT7C13LsxdvYSfcVCvo/view?usp=sharing
+- Training Dataset : https://www.kaggle.com/datasets/andrewmvd/animal-faces
+- Model Weights : https://drive.google.com/file/d/1RUdl6mS58G11yhT7C13LsxdvYSfcVCvo/view?usp=sharing
 ---
 
 ## ⚙️ Installation & Run
@@ -53,5 +53,6 @@ pip install -r requirements.txt
 
 # 3️⃣ Run the Flask app
 python app.py
+
 
 
