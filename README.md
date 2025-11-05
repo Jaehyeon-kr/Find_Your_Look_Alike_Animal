@@ -51,8 +51,9 @@ cd Find_Your_Look_Alike_Animal
 # 2️⃣ Install dependencies
 pip install -r requirements.txt
 
-# 3️⃣ Run the Flask app
+# 3️⃣ Download Model Weight
+model download weight path : https://drive.google.com/file/d/1RUdl6mS58G11yhT7C13LsxdvYSfcVCvo/view?usp=sharing
+
+# 4️⃣ Run the Flask app
 python app.py
-
-
 
