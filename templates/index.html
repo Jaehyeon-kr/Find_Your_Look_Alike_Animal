@@ -2,16 +2,26 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>동물 이미지 분류기</title>
+    <title>당신은 어떤 동물을 닮았을까요?</title>
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f4f6f8;
+            background-color: #ffffff;
             text-align: center;
             padding: 50px;
         }
+
         h1 {
             color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        /* 업로드 카드 */
+        .form-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
         }
         form {
             background-color: #fff;
@@ -24,7 +34,7 @@
             margin: 20px 0;
         }
         input[type="submit"] {
-            background-color: #0078ff;
+            background-color: #6a7581;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -32,34 +42,147 @@
             cursor: pointer;
         }
         input[type="submit"]:hover {
-            background-color: #005fcc;
+            background-color: #bd7ba4;
         }
-        .result {
+
+        /* 결과 카드 */
+        .result-wrap {
+            display: flex;
+            justify-content: center;
             margin-top: 30px;
         }
-        img {
-            margin-top: 15px;
-            width: 300px;
-            border-radius: 8px;
+        .result-card {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;  /* 카드 안에서 사진/글씨 모두 가운데 */
+        }
+        .result-card img {
+            margin: 15px auto 0;
+            width: 260px;
+            height: 260px;
+            border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            object-fit: cover;
+            display: block;
+        }
+
+        p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        h3 {
+            margin-top: 20px;
+        }
+
+        .share-box {
+            margin-top: 25px;
+        }
+        .share-btn {
+            background-color: #6a7581;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .share-btn:hover {
+            background-color: #bd7ba4;
+        }
+        .share-link-text {
+            font-size: 13px;
+            color: #777;
+            margin-top: 8px;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
     <h1>🐾 동물 이미지 분류기</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required>
-        <br>
-        <input type="submit" value="이미지 업로드 및 예측">
-    </form>
 
-    {% if filename %}
-    <div class="result">
-        <h2>예측 결과</h2>
-        <p><strong>클래스:</strong> {{ label }}</p>
-        <p><strong>확률:</strong> {{ "%.2f"|format(prob * 100) }}%</p>
-        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image">
+    {# 업로드 폼: show_form=True일 때만 표시 #}
+    {% if show_form %}
+    <div class="form-wrap">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <br>
+            <input type="submit" value="이미지 업로드 및 예측">
+        </form>
     </div>
     {% endif %}
+
+    {# 예측 결과가 있을 때만 결과 카드 표시 #}
+    {% if filename %}
+    <div class="result-wrap">
+        <div class="result-card">
+            <h2>예측 결과</h2>
+
+            <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image">
+
+            {# 영어 라벨 → 한글로 보기 좋게 매핑 #}
+            {% set label_map = {'cat': '고양이상', 'dog': '강아지상', 'wild': '야생동물상'} %}
+            {% set display_label = label_map.get(label, label) %}
+
+            <p><strong>클래스:</strong> {{ display_label }}</p>
+            <p><strong>확률:</strong> {{ "%.2f"|format(prob * 100) }}%</p>
+
+            {# 라벨별 설명 #}
+            {% if label == "cat" %}
+                <h3>도도하지만 매력적인 고양이상 😼</h3>
+                <p>
+                    처음엔 조금 차가워 보일 수 있지만, 친해질수록 따뜻한 매력이 드러나는 타입이에요.
+                    섬세한 얼굴과 또렷한 이목구비 덕분에 사진이 잘 받는 편이에요.
+                </p>
+                <p><strong>대표 연예인 예시: 아이유, 제니, 수지</strong></p>
+            {% elif label == "dog" %}
+                <h3>사람들을 행복하게 만드는 강아지상 🐶</h3>
+                <p>
+                    밝고 친근한 인상을 가진 당신! 처음 보는 사람과도 금방 친해지는 타입이에요.
+                    웃을 때 특히 매력이 폭발해서 주변 사람들을 편안하게 만들어줘요.
+                </p>
+                <p><strong>대표 연예인 예시: 박보검, 유재석, 조이</strong></p>
+            {% elif label == "wild" %}
+                <h3>예측 불가한 매력의 야생동물상 🐾</h3>
+                <p>
+                    개성 강하고 자유로운 인상을 가진 타입이에요.
+                    한 번 보면 쉽게 잊히지 않는 분위기로 사람들의 시선을 끌어요.
+                </p>
+            {% endif %}
+
+            {# 공유 링크 #}
+            {% if share_url %}
+            <div class="share-box">
+                <button class="share-btn" onclick="copyLink()">결과 링크 복사</button>
+                <div id="share-link" class="share-link-text">{{ share_url }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        function copyLink() {
+            const el = document.getElementById('share-link');
+            if (!el) return;
+            const text = el.textContent;
+            if (!text) return;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('링크가 복사되었습니다!');
+            }).catch(() => {
+                alert('복사에 실패했어요. 직접 복사해주세요 😢');
+            });
+        }
+    </script>
 </body>
 </html>
+
+
+
